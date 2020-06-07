@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        li{
+            list-style: none;
+        }
+        .content{
+            /* width: 1200px; */
+            width: 100vw;
+            margin: 0 auto;
+        }
+        /* #tip{
+            line-height: 45px;
+            background: #999;
+            color:#666;
+            text-align: center;
+        } */
+        .types{
+            padding: 10px;
+            box-shadow: 0 0 2px #E3573E;;
+            overflow: hidden;
+            background-color: whitesmoke;
+        }
+        .types button{
+            outline: 0;
+            border: none;
+            background-color: #E3573E;
+            color: white;
+            line-height: 20px;
+            border-radius: 15px;
+            padding: 4px 10px;
+            margin: 4px 0;
+        }
+        #list{
+            overflow: hidden;
+            overflow-y: auto;
+        }
+        #list li{
+            float: left;
+            width: 50vw;
+            box-sizing: border-box;
+            padding: 5px;
+            /* margin: 5px 0; */
+            box-shadow: 0 0 2px #999;
+            border-radius: 10px;
+        }
+        #list img{
+            width: 100%;
+            border-radius: 50%;
+            transition: all 8s;
+        }
+        #list h4{
+            text-align: center;
+            line-height: 30px;
+        }
+        #list li:hover img{
+            transform: rotate(360deg);
+            transition: linear initial;
+        }
+        #list a{
+            display: block;
+            text-align: center;
+            color: blueviolet;
+            text-decoration: none;
+        }
+        #loading{
+            /* https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589481222475&di=30eccc3a0bdbee8675d0afef79b718de&imgtype=0&src=http%3A%2F%2Fwww.05sun.com%2Fup%2F1505%2F2015511986.png */
+            background:url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589481222475&di=30eccc3a0bdbee8675d0afef79b718de&imgtype=0&src=http%3A%2F%2Fwww.05sun.com%2Fup%2F1505%2F2015511986.png') center center no-repeat;
+            background-color: '#eeeeee';
+            background-size: 100px auto;
+            opacity: 0.8;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- <a href="songs.html?singer=336">周杰伦</a>
+    <a href="songs.html?singer=339">周杰</a> -->
+    <div class="content" id="content">
+        <!-- <h4 id="tip">下拉刷新</h4> -->
+        <div class="types" id="Top">
+            <button list_type="0">全部</button>
+            <button list_type="1">华语男</button>
+            <button list_type="2">华语女</button>
+            <button list_type="3">华语组合</button>
+            <button list_type="4">日韩男</button>
+            <button list_type="5">日韩女</button>
+        </div>
+        <ul id="list">
+           
+        </ul>
+        <!-- 遮挡罩 -->
+        <div id="loading"></div>
+        <!-- TOP -->
+        <a href="#Top" style="position:fixed;bottom:50px;right:15px;">
+            <img style="width:35px;border-radius:50%;border:2px solid #ACACAC;padding:5px 5px" src="img/top.svg" alt="">
+        </a>
+    </div>
+</body>
+<script src="./js/zepto.js"></script>
+<script src="./js/iscroll.Veb.js"></script>
+<script>
+    // 默认搜索类型 0 全局变量
+    var type = 0;
+    // var list =[];
+    var html="";
+    var pn = 1;
+
+     //初始进入页面调用
+    getData();
+    // render();
+
+    // 分类
+    $(".types button").live("click",function(){
+       var type =$(this).attr("list_type"); // 获取按钮对应的类型
+       html="";
+       pn=1;
+       getData();//调用 
+    });
+
+    // 封装请求
+    function getData(){
+      $("#loading").show(); //loading
+
+      var url = 'http://vebcoder.cn:9090//artist/artistInfo';
+       $.get(url,{
+        category:type,
+        rn:100,
+        pn:pn
+        },function(res){
+            // 获取歌手列表数据
+            // console.log(res.data.artistList); 
+            // list.push(res.data.artistList);
+        var list =res.data.artistList
+        for(var i=0;i<list.length;i++){
+        html+=` <li><img src="${list[i].pic}" alt="">
+                <h4>${list[i].name}</h4>
+                <a href="songs.html?artistid=${list[i].id}">单曲</a>
+            </li>`
+        }
+        $("#list").html(html);
+        $("#loading").hide();  //隐藏loading
+        });
+    };
+
+    // 触底
+    window.onscroll = debounce(Scroll,400);
+    function Scroll() {
+        let scrollTop = document.body.scrollTop||document.documentElement.scrollTop;
+        let scrollHeight = document.body.scrollHeight;
+        let innerHeight = window.innerHeight;
+        // console.log(clientHeight);
+        if (scrollTop+innerHeight >= scrollHeight-150) {
+            console.log('触底');
+            pn=pn++,
+            getData();
+        }
+        // console.log(scrollTop);
+        // console.log(scrollHeight);   
+    };
+
+    // 防抖
+     function debounce(fn,delay){
+        let timer = null 
+        return function() {
+            if(timer){
+                clearTimeout(timer) 
+            }
+            timer = setTimeout(fn,delay) 
+        }
+    }
+
+    // 下拉
+    // var isc=new iScroll("content",{
+    //     topOffset:45,
+    //     y:-45,
+    //     onScrollMove:function(){
+
+    //         if(this.y>30){
+    //             tip.innerHTML="松开立即刷新"
+    //             this.minScrollY=0;
+    //         }else{
+    //             tip.innerHTML="下拉刷新"
+    //             this.minScrollY=-45;
+    //         }
+
+    //     },
+    //     // 滚动结束回调
+    //     onScrollEnd:function(){
+    //         if(this.minScrollY==0){
+
+    //             tip.innerHTML="正在刷新中...";
+    //             var html="";
+    //             var pn = 1;
+    //             getData();
+    //         }
+    //     }
+    // })
+   
+</script>
+</html>

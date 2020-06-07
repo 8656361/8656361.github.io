@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/zepto.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul,li{
+            list-style: none;
+        }
+        #list{
+            width: 100vw;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+        li{
+            margin: 1px 0;
+            padding:5px;
+            box-shadow: 0 0 3px #CDCDCD;
+        }
+        #list li{
+            height: 80px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 10px;
+        }
+        #list li img{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            transition: all 15s;
+        }
+        #list li:hover img{
+            transform: rotate(360deg);
+        }
+        .info h4{
+            width:150px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .info p{
+            width: 150px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .btns{
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+        }
+        .btns button:nth-child(2){
+            margin-top: 5px;
+        }
+          button{
+            outline: 0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: #f44336;
+            color: white;
+        }
+        audio{
+            position: fixed;
+            left: 0;
+            bottom: -80px;
+            height: 80px;
+            width: 100%;
+            outline: 0;
+            transition: all .5s;
+        }
+       
+        #loading{
+            /* https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589481222475&di=30eccc3a0bdbee8675d0afef79b718de&imgtype=0&src=http%3A%2F%2Fwww.05sun.com%2Fup%2F1505%2F2015511986.png */
+            background:url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589481222475&di=30eccc3a0bdbee8675d0afef79b718de&imgtype=0&src=http%3A%2F%2Fwww.05sun.com%2Fup%2F1505%2F2015511986.png') center center no-repeat;
+            background-color: '#eeeeee';
+            background-size: 100px auto;
+            opacity: 0.8;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="Top"></div>
+    <ul id="list">
+        
+    </ul>
+    <div id="loading"></div>
+    <audio controls></audio>
+    <a href="#Top" style="position:fixed;bottom:50px;right:10px;">
+        <img style="width:35px;border-radius:50%;border:2px solid #ACACAC;padding:5px 5px" src="img/top.svg" alt="">
+    </a>
+    <!-- <video controls></video> -->
+</body>
+<script src="./js/query.js"></script>
+<script>
+    var query = getQuery();
+    // console.log(query);
+    var url="http://vebcoder.cn:9090/artist/artistMusic";
+
+    $("#loading").show();//显示loading
+    $.get(url,{
+        artistid:query.artistid,
+        rn:100,
+        pn:1
+    },function(res){
+
+        $("#loading").hide();
+
+        var html='';
+        var list =res.data.list;
+        for(var i=0;i<list.length;i++){  
+         html+=`<li>
+                <img src=${list[i].pic} alt="">
+                <div class="info">
+                    <h4>${list[i].name}</h4>
+                    <p>${list[i].artist}</p>
+                </div>
+                <div class="btns">
+                    <button class="song" song_id="${list[i].rid}">播放单曲</button>
+                    <button class="mv" song_id="${list[i].rid}">播放mv</button>
+                </div>
+            </li>`;
+            if(list[i].hasmv==1){
+                $(".btns .mv").attr("disabled","disabled");
+
+                $(".btns .mv").css("background-color","grey");
+                
+            }else{
+                //灰色按钮，禁掉
+                $(".btns .mv").attr("disabled","disabled");
+                $(".btns .mv").css("background","grey");
+
+                // var btn = document.getElementsByClassName(".mv");
+                // btn[0].setAttribute("disabled",'disabled');
+                // btn[0].style.backgroundColor = "grey";
+
+            }
+        }
+        $("#list").html(html)
+    });
+
+    // 事件委托  获取歌曲id 发送请求
+    $(".song").live("click",function(){
+        var rid = $(this).attr("song_id");
+
+        $.get("http://vebcoder.cn:9090/url?format=mp3&rid="+rid+
+        "&response=url&type=convert_url3&br=128kmp3&from=web",function(res){
+        
+        var url = JSON.parse(res).url;
+        console.log(url);
+        // 设置播放路径
+        $("audio").attr("src",url).css("bottom",0);
+
+        // 调用DOM对象下play方法 播放音频  
+        // 其实$("audio")是一个集合  get(index)获取集合对应的DOM对象
+        $("audio").get(0).play();
+        })
+    });
+
+    $(".mv").live('click',function(){
+        var rid = $(this).attr("song_id");
+        var url ='http://vebcoder.cn:9090/url?rid='+rid+'&response=url&format=mp4%7Cmkv&type=convert_url'
+        $.get(url,function(res){
+            // $("video").get(0).play();
+            // window.open(res);
+            window.open(res,"mv","width=1000,height=600,left=200px,top=40px");
+
+            // 点击播放mv，跳转播放页面，携带mv的id，到达播放页面，从路径中获取mv
+            // 的id，发起请求获取播放路径，设置video的src
+            
+        })
+    });
+</script>
+</html>
