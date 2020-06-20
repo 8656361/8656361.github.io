@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .star-box{
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+            cursor: pointer;
+            /* border: 1px solid; */
+            width: 150px;
+            min-width: 150px;
+            height: 30px;
+        }
+       .back_box{
+           position: absolute;
+           display: flex;
+           width: 150px;
+           height: 30px;
+           min-width: 150px;
+           z-index: 1;
+           font-size: 0;
+           line-height: 0;
+           justify-content: space-around;
+       }
+       .middle_mask{
+           height: 30px;
+           height: 30px;
+           background-color: white;
+           opacity: 1;
+           z-index: 2;
+           position: absolute;
+           right: 0;
+       }
+       .front_box{
+           position: absolute;
+           width: 150px;
+           height: 30px;
+           min-width: 150px;
+           display: flex;
+           z-index: 3;
+           font-size: 0;
+           line-height: 0;
+           justify-content: space-around;
+       }
+    </style>
+</head>
+<body>
+<script src='vue.js'></script>
+<!-- vue模板 -->
+<div id='app'>
+    <input type="text" v-model="score">
+    <br><hr><br>
+    <my-com :score="score*1" @point="pointVal"></my-com>
+</div>
+<!-- 子组件模板 -->
+<script type='text/x-template' id='myCom'>
+    <div>
+        <div class="star-box" @click="clickStar" ref="star_box"> 
+            <!-- 底层星星          -->
+            <div class="back_box"><img v-for="(x,index) in 5" :key="index" width="30px" src="./imgs/star.png" alt=""></div>
+            <!-- 遮挡层 -->
+            <div class="middle_mask" :style="{width:backStar}"></div>
+            <!-- 上层星星 -->
+            <div class="front_box"><img v-for="(x,index) in 5" :key="index" src="./imgs/star-empty.png" width="30px" alt=""></div>
+        </div>
+    </div>
+</script>
+<script>
+    // 子组件
+    Vue.component('my-com',{
+        template: '#myCom',
+        props:{
+            score:Number,
+        },
+        data(){
+            return{
+              
+            }
+        },
+        methods:{
+            clickStar(e){
+                var left = e.pageX - this.$refs.star_box.offsetLeft;
+                // console.log(left);
+                // 把点击距离右侧的距离转成分数，传回父组件   显示到input
+                var pointVal = (left/150*5).toFixed(1);
+                // console.log(pointVal);
+                this.$emit("point",pointVal);   //子向父发射事件，传值 
+            } 
+        },
+        computed: {
+            backStar:function(){
+                // 从父组件传回的分数，改变middle的宽度
+                // console.log((150-this.score/5*150).toFixed()+'px');
+                return (150-this.score/5*150).toFixed()+'px';
+            }
+        }
+    });
+    // 根组件
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            score:3.5
+        },
+        methods: {
+            pointVal(va){
+                this.score = va;
+            }
+        }  
+    });
+    // #F1F909
+    // offset（X Y）鼠标相对事件目标的坐标，也就是鼠标与星星组件左侧的距离
+    // client（X Y）鼠标相对于当前网页窗口的边距的距离
+</script>
+</body>
+</html>

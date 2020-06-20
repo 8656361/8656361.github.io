@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        nav{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            display: flex;
+            z-index: 2;
+        }
+        nav button{
+            display: block;
+            height: 35px;
+            width: 33.3333%;
+        }
+        h1{
+            text-align: center;
+        }
+        .root1,.root2,.root3{
+            width: 100vw;
+            height: 100vh;
+            padding-top: 55px;
+            background-color: aqua;
+            position: absolute;      
+            /* 不用relative */
+        }
+        .root2{
+            background-color: yellow;
+        }
+        .root3{
+            background-color: pink;
+        }
+        #app{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* .right-enter,
+        .left-leave-to{
+            right:-100vw;
+        }
+        .right-enter-active,
+        .right-leave-active,
+        .left-enter-active,
+        .left-leave-active
+        {
+            transition: all 0.8s;
+        }
+        .right-enter-to,
+        .right-leave,
+        .left-enter-to,
+        .left-leave
+        {
+            right:0;
+        }
+        .right-leave-to,
+        .left-enter{
+            right: 100vw;
+        } */
+
+        /* right */
+        .right-enter{
+            right:-100vw;
+        }
+        .right-enter-active,
+        .right-leave-active,
+        .left-enter-active,
+        .left-leave-active{
+            transition: .5s;
+        }
+        .right-enter-to,
+        .right-leave{
+            right:0;
+        }
+        .right-leave-to{
+            right: 100vw;
+        }
+
+        /* left */
+        .left-enter{
+            left: -100vw;
+        }
+        .left-enter-to,
+        .left-leave{
+            left: 0;
+        }
+        .left-leave-to{
+            left:100vw
+        }  
+    </style>
+</head>
+<body>
+<script src='vue.js'></script>
+<!-- vue模板 -->
+<div id='app'>
+<!-- nav -->
+    <nav>
+        <button v-for="(item,i) in list" @click="check(i)" :style="{color:ind==i+1?con:'#333'}">{{item}} </button>
+    </nav>
+  <!-- main -->
+  <!-- 过渡时，上一个组件和下一个组件是同时存在的 -->
+    <transition :name="type">
+        <component :is="currentCom"></component>
+    </transition>
+ 
+</div>
+<!-- 子组件模板 -->
+<script type='text/x-template' id='myCom'>
+    <div>
+      
+    </div>
+</script>
+<script>
+    // 子组件
+    Vue.component('my-com1',{
+        template: `  <div class="root1">
+                        <h1>QQ空间</h1>
+                    </div>`,
+    });
+    Vue.component('my-com2',{
+        template: `  <div class="root2">
+                        <h1>QQ消息</h1>
+                    </div>`,
+    });
+    Vue.component('my-com3',{
+        template: `  <div class="root3">
+                        <h1>QQ联系人</h1>
+                    </div>`,
+    });
+
+    // 根组件
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            list:["空间","消息","联系人"],
+            currentCom:"my-com1",    //动态切换组件的变量
+            ind:1,
+            type:"right"            //动画类型
+        },
+        methods: {
+            // 改变ind
+            check(i){
+                this.currentCom ='my-com'+(i+1);
+                this.ind = i+1;
+            }
+        },
+        watch: {
+            // 切换transition 的name值  (new,old)
+            ind:function(ne,ol){
+                if(ol>ne){
+                    this.type="left"
+                }else{
+                    this.type="right"
+                }
+            }
+        },
+        computed:{
+            // 计算字体颜色
+            con:function(){
+                switch (this.ind) {
+                    case 1:
+                        return 'aqua'
+                    case 2:
+                        return 'yellow'
+                    case 3:
+                        return 'pink'
+                    default:
+                        break;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
