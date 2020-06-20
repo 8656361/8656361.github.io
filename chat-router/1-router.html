@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <script src="./vue-router.js"></script>
+    <style>
+        *{margin: 0;padding: 0;box-sizing: border-box;}
+        a{text-decoration: none;}
+        #root{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        nav{
+            width: 100vw;
+            height: 45px;
+            background-color: #999;
+            position: absolute;
+            z-index: 1;
+            display: flex;
+        }
+        nav a{
+            display: block;
+            line-height: 45px;
+            text-align: center;
+            width: 50%;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 0;
+            border-right: 0;
+        }
+        nav a:nth-of-type(2){
+            border-left: 1px solid #666;
+        }
+        h1{
+            text-align: center;
+        }
+        .root_com1,
+        .root_com2,
+        .root_com3
+        {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            padding-top: 45px;
+            background-color: #eee;
+        }
+        .root_com2{
+            background-color: aqua;
+        }
+        .root_com3{
+            padding-top: 0;
+            z-index: 3;
+            background-color: rgba(129, 167, 202, 0.863);
+        }
+        .root_com2 ul{
+            width: 220px;
+            height: 90%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        .com2_item{
+            width: 100%;
+            list-style: none;
+        }
+        .com2_item a{
+            display: block;
+            font-size: 26px;
+            font-weight: 600;
+            text-align: left;
+            width: 100%;
+            color: #999;
+        }
+        /*  */
+        .root_com3 p{
+            margin-top: 50px;
+            text-align: center;
+            font-size: 25px;
+        }
+        .root_com3 p:nth-of-type(2) a{
+            background: #999;
+            border-radius: 10px;
+            padding: 3px 8px;
+        }
+
+        /* 动画 */
+        /* right */
+        .right-enter{
+            right: -100vw;
+        }
+        .right-enter-active,
+        .right-leave-active,
+        .left-enter-active,
+        .left-leave-active{
+            transition: all 0.5s;
+        }
+        .right-enter-to,
+        .right-leave{
+            right: 0;
+        }
+        .right-leave-to{
+            right: 100vw;
+        }
+        /* left */
+        .left-enter{
+            left: -100vw;
+        }
+        .left-enter-to,
+        .left-leave{
+            left: 0;
+        }
+        .left-leave-to{
+            left: 100vw;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+   <div id="root">
+       <transition :name="type">
+           <!-- 让nav和下部分同步过渡；除了动画外还需要 过渡后隐藏/显示 -->
+            <nav v-show="navShow"> 
+                <router-link :to="{name:'myCom1',query:{index:1}}">主页</router-link>
+                <!-- 把list传过去 -->
+                <router-link :to="{name:'myCom2',query:{list,index:2}}" >消息</router-link>
+            </nav>
+        </transition>
+        <!-- 出口文件 -->
+       <transition :name="type">
+           <keep-alive>
+                <router-view></router-view>
+           </keep-alive>    
+       </transition>
+   </div>
+</div>
+</body>
+<!-- home的模板 -->
+<script type="text/html" id="myCom1">
+    <h1 class="root_com1">
+       这里是主页
+    </h1>
+</script>
+<!-- 好友列表模板 -->
+<script type="text/html" id="myCom2">
+    <div class="root_com2">
+        <ul>
+            <li class="com2_item" v-for="(item,ind) in dataArr" :key="ind">
+                <router-link :to="{name:'myCom3',query:{name:item,index:3}}">{{item}}</router-link>
+            </li>
+        </ul>
+    </div>
+</script>
+<!-- 消息详情模板 -->
+<script type="text/html" id="myCom3">
+    <div class="root_com3">
+        <p>我在这里和 <strong>{{$route.query.name}}</strong> 聊天</p>
+        <p><router-link :to="{name:'myCom2',query:{index:2}}">返回</router-link></p>
+        <!-- <p><span @click="router.go(-1)">返回</span></p> -->
+    </div>
+</script>
+
+<!-- js -->
+<script>
+    // 子组件
+    var Home = {template:"#myCom1",};
+
+    var Message ={
+        template:"#myCom2",
+        data(){
+            return{
+                dataArr:[],
+            }
+        },
+        methods: {
+            // 赋值函数
+            getData:function(){
+                if(this.$route.query.list){
+                    this.dataArr=this.$route.query.list
+                }
+            }
+        },
+        watch: {
+              //监听路由  赋值
+            $route:function(){        
+                this.getData();
+            }
+        },
+    };
+    // 内部子组件
+    var MessagePage = {template:"#myCom3"};
+    // 路由
+    const router= new VueRouter({
+        routes:[
+
+            {path:"/",component:Home,name:"myCom1"},
+            {path:"/message",component:Message,name:"myCom2"},
+            {path:"/message/page",component:MessagePage,name:"myCom3"},
+        ]
+    });
+    // 根组件
+    var app = new Vue({
+        el:"#app",
+        router,         //router路由对象
+        data:{
+            list:["巴菲特","麻花腾","奥巴马","特朗普","金三胖","习近平","海绵宝宝","派大星"],
+            type:"left",          //动画类型
+            num:0,               //接收路由的index，切换动画
+            navShow:true,       //是否显示导航条
+        },
+       watch: {
+        //  监听传回的num的值，改变type
+           num(ne,ol){
+              if(ne>ol){
+                  this.type = 'right';
+                  console.log(111);
+              }else{
+                  this.type = 'left';
+                  console.log(222); 
+              }
+           },
+        //   监听路由；根据传回的index改变num，改navShow（过渡补充用）
+           $route(newVal,oldVal){
+                 //console.log(newVal);
+                this.num = newVal.query.index;      //给num赋值index
+
+                // 让nav和下部分同步过渡；除了动画外还需要 过渡后隐藏/显示
+                if(newVal.path=='/message/page'){   //监听path给nav显示/隐藏      
+                    this.navShow = false;
+                }else{
+                    // setTimeout(() => {
+                    this.navShow = true;
+                    // }, 500);
+                }
+            }
+            // 从路由级数判断type类型
+            
+       }
+    });
+
+    // 0、组件/页面左右切换动画时，可能存在组件同时存在的现象（会上下排列），可以通过position：absolute（relative有兼容问题）
+    // 1、urlEncode编码/urlDecode解码
+    //   把数据编码成十六进制，过滤掉敏感字符 （或者加密）
+    // 2、MD5加密
+    // 3、 历史记录
+    //  window.history.back()
+    //      history.back(); 上一页
+    //      history.go(-1); 下一页
+    //      history.go(-2); 下 2 页
+    //   router.history 路由记录
+    //      router.go(-1);
+    // 4、split（"/"）裁剪时，如果路径为空，也会裁剪出两条空数据（也就是最低两条）
+    // 5、从路由级数判断type类型/或者从每次点击路由传值。传回index进行watch监听new和old判断type
+
+</script>
+</html>
