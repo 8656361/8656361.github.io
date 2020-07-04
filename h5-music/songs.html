@@ -59,7 +59,10 @@
         .btns button:nth-child(2){
             margin-top: 5px;
         }
-          button{
+		#nomv{
+			background-color: #999;
+		}
+        button{
             outline: 0;
             padding: 5px 10px;
             border-radius: 20px;
@@ -117,44 +120,48 @@
         rn:100,
         pn:1
     },function(res){
-
+        console.log(res);
+        
         $("#loading").hide();
 
         var html='';
         var list =res.data.list;
         for(var i=0;i<list.length;i++){  
-         html+=`<li>
-                <img src=${list[i].pic} alt="">
-                <div class="info">
-                    <h4>${list[i].name}</h4>
-                    <p>${list[i].artist}</p>
-                </div>
-                <div class="btns">
-                    <button class="song" song_id="${list[i].rid}">播放单曲</button>
-                    <button class="mv" song_id="${list[i].rid}">播放mv</button>
-                </div>
-            </li>`;
-            if(list[i].hasmv==1){
-                $(".btns .mv").attr("disabled","disabled");
-
-                $(".btns .mv").css("background-color","grey");
-                
+           if(list[i].hasmv == 1){
+			   // 通过if else判断属性  修改btn的样式会全部修改，简单的方法就是写的时候就加上去
+			   
+                // $(".btns #mv").attr("disabled",true);	
+				//  $(".btns #mv").css("background","gray");
+			html+=`<li>
+				   <img src=${list[i].pic} alt="">
+				   <div class="info">
+					   <h4>${list[i].name}</h4>
+					   <p>${list[i].artist}</p>
+				   </div>
+				   <div class="btns">
+					   <button id="song" song_id="${list[i].rid}">播放单曲</button>
+					   <button id="hasmv" song_id="${list[i].rid}">播放mv</button>
+				   </div>
+			   </li>`;
             }else{
-                //灰色按钮，禁掉
-                $(".btns .mv").attr("disabled","disabled");
-                $(".btns .mv").css("background","grey");
-
-                // var btn = document.getElementsByClassName(".mv");
-                // btn[0].setAttribute("disabled",'disabled');
-                // btn[0].style.backgroundColor = "grey";
-
+                html+=`<li>
+                       <img src=${list[i].pic} alt="">
+                       <div class="info">
+                           <h4>${list[i].name}</h4>
+                           <p>${list[i].artist}</p>
+                       </div>
+                       <div class="btns">
+                           <button id="song" song_id="${list[i].rid}">播放单曲</button>
+                           <button id="nomv" disabled >暂无mv</button>
+                       </div>
+                   </li>`;
             }
         }
         $("#list").html(html)
     });
 
     // 事件委托  获取歌曲id 发送请求
-    $(".song").live("click",function(){
+    $("#song").live("click",function(){
         var rid = $(this).attr("song_id");
 
         $.get("http://vebcoder.cn:9090/url?format=mp3&rid="+rid+
@@ -171,17 +178,16 @@
         })
     });
 
-    $(".mv").live('click',function(){
+    $("#hasmv").live('click',function(){
         var rid = $(this).attr("song_id");
         var url ='http://vebcoder.cn:9090/url?rid='+rid+'&response=url&format=mp4%7Cmkv&type=convert_url'
         $.get(url,function(res){
             // $("video").get(0).play();
             // window.open(res);
             window.open(res,"mv","width=1000,height=600,left=200px,top=40px");
-
-            // 点击播放mv，跳转播放页面，携带mv的id，到达播放页面，从路径中获取mv
-            // 的id，发起请求获取播放路径，设置video的src
-            
+			
+            // 点击播放hasmv，跳转播放页面，携带hasmv的id，到达播放页面，从路径中获取hasmv
+            // 的id，发起请求获取播放路径，设置video的src     
         })
     });
 </script>
