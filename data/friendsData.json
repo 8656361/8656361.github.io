@@ -1,0 +1,119 @@
+[
+    {
+        "groupName": "同学",
+        "list": [
+            {
+                "name": "关键",
+                "sign": "卧曹 卧曹 卧曹",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "于建帅",
+                "sign": "卧曹 卧曹 卧曹",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "高金鹏",
+                "sign": "卧曹 卧曹 卧曹",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "天下",
+                "sign": "卧曹 卧曹 卧曹",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "曹浩",
+                "sign": "卧槽，楼上都不想活了吧，来来来与我大战三百回合,轰天裂地罗三炮",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "遇见谁",
+                "sign": "卧槽，浩哥漏气了快跑,",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "遇见鬼",
+                "sign": "卧槽，浩哥漏气了快跑",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "遇见神",
+                "sign": "卧槽，浩哥漏气了快跑",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "遇见人",
+                "sign": "卧槽，快救救我，快救救我，快救救我...",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            }
+        ]
+    },
+    {
+        "groupName": "二次元",
+        "list": [
+            {
+                "name": "诚哥",
+                "sign": "不枉此生",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "通空探真理",
+                "sign": "不枉此生",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "魔王",
+                "sign": "打工真爽",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "骨王",
+                "sign": "此逼装的不错",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            }
+        ]
+    },
+    {
+        "groupName": "朋友",
+        "list": [
+            {
+                "name": "马云",
+                "sign": "没钱还花呗",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "马化腾",
+                "sign": "没钱买皮肤",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "李嘉诚",
+                "sign": "没钱买房子",
+                "online": false,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            },
+            {
+                "name": "雷军",
+                "sign": "谁他妈买小米",
+                "online": true,
+                "src": "https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=226418344,3562831340&fm=26&gp=0.jpg"
+            }
+        ]
+    }
+]
